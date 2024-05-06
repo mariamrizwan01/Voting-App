@@ -1,5 +1,7 @@
-import 'dart:async';
 import 'dart:io';
+import 'hasVoted.dart';
+import 'savevoter.dart';
+import 'startResultDisplayTimer.dart';
 
 void main() {
   List<String> candidates = ['Candidate A', 'Candidate B', 'Candidate C'];
@@ -68,35 +70,5 @@ void main() {
   startResultDisplayTimer(candidates, votes);
 }
 
-void startResultDisplayTimer(List<String> candidates, List<int> votes) {
-  Timer(Duration(minutes: 1), () => displayResults(candidates, votes));
-}
 
-void displayResults(List<String> candidates, List<int> votes) {
-  print('\n-------VOTING RESULTS:-------\n');
-  int totalVotes = 0;
-  for (int i = 0; i < candidates.length; i++) {
-    print('${candidates[i]}: ${votes[i]} votes');
-    totalVotes += votes[i];
-  }
 
-  int winnerIndex = votes.indexOf(votes.reduce((max, current) => max > current ? max : current));
-  print('\n-------WINNER:-------\n\n ${candidates[winnerIndex]}');
-  print('\n-------TOTAL VOTES CASTED:--------\n\n $totalVotes\n');
-}
-
-// Simple function to check if the user has voted already (using a text file for simplicity)
-bool hasVoted(String userName) {
-  File file = File('voters.txt');
-  if (file.existsSync()) {
-    List<String> voters = file.readAsLinesSync();
-    return voters.contains(userName);
-  }
-  return false;
-}
-
-// Simple function to save the user's name to the voters list (using a text file for simplicity)
-void saveVoter(String userName) {
-  File file = File('voters.txt');
-  file.writeAsStringSync(userName + '\n', mode: FileMode.append);
-}
